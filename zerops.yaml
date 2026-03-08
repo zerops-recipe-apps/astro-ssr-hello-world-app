@@ -4,6 +4,13 @@ zerops:
   - setup: prod
     build:
       base: nodejs@22
+      # Astro uses Vite + Rollup for bundling. Rollup ships a native
+      # binary for glibc (Ubuntu/Debian) and musl (Alpine) separately.
+      # The npm optional dep resolution sometimes misses the musl binary
+      # on Alpine build containers, causing build failures. Ubuntu
+      # avoids this - the runtime (Alpine) doesn't need Rollup at all
+      # since node_modules contains only runtime deps after deploy.
+      os: ubuntu
 
       buildCommands:
         # npm ci installs exact versions from package-lock.json -
