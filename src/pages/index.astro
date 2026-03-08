@@ -1,0 +1,200 @@
+---
+// Disable static prerendering - this page must run server-side on
+// every request to reflect live database state.
+export const prerender = false;
+
+import { pool } from '../lib/db.server';
+
+// Build-time constants injected by vite.define in astro.config.mjs.
+const astroVersion = __ASTRO_VERSION__;
+const buildTime = __BUILD_TIME__;
+const nodeEnv = process.env.NODE_ENV ?? 'production';
+
+let dbStatus = 'connected';
+let dbError = '';
+let greeting = 'Hello from Zerops!';
+let httpStatus = 200;
+
+try {
+  const client = await pool.connect();
+  try {
+    // Query the migrated greetings table seeded by migrate.js.
+    const result = await client.query(
+      'SELECT message FROM greetings LIMIT 1'
+    );
+    if (result.rows.length > 0) {
+      greeting = result.rows[0].message;
+    }
+  } finally {
+    client.release();
+  }
+} catch (err) {
+  dbStatus = 'error';
+  dbError = err instanceof Error ? err.message : String(err);
+  // Return 503 but still render the page to show what failed.
+  httpStatus = 503;
+}
+
+Astro.response.status = httpStatus;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Astro SSR · Zerops</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #0e0f14;
+        color: #e2e4f0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+      .card {
+        background: #181a24;
+        border: 1px solid #2a2d3e;
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        max-width: 520px;
+        width: 100%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      }
+      .logos {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.75rem;
+      }
+      .logo-divider {
+        width: 1px;
+        height: 36px;
+        background: #2a2d3e;
+      }
+      h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 0.4rem;
+        background: linear-gradient(135deg, #fff 30%, #bc52ee);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .subtitle {
+        font-size: 0.85rem;
+        color: #6b7099;
+        margin-bottom: 2rem;
+      }
+      .details {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        border: 1px solid #2a2d3e;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.65rem 1rem;
+        border-bottom: 1px solid #2a2d3e;
+        font-size: 0.85rem;
+      }
+      .row:last-child { border-bottom: none; }
+      .row-label { color: #6b7099; }
+      .row-value { color: #e2e4f0; font-weight: 500; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; }
+      .status-ok {
+        color: #4ade80;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .status-ok::before {
+        content: '';
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 6px #4ade80;
+      }
+      .status-err {
+        color: #f87171;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        max-width: 260px;
+        text-align: right;
+        word-break: break-all;
+      }
+      .status-err::before {
+        content: '';
+        flex-shrink: 0;
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #f87171;
+        box-shadow: 0 0 6px #f87171;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="logos">
+        <!-- Astro logo -->
+        <svg width="44" height="44" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Astro">
+          <defs>
+            <linearGradient id="astro-a" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#BC52EE"/>
+              <stop offset="100%" stop-color="#FF5D01"/>
+            </linearGradient>
+          </defs>
+          <path d="M163.4 28.7c1.9 2.2 2.8 5.2 4.6 11.3l39 134.3a152.5 152.5 0 0 0-45.9-15.8L137.6 76a7 7 0 0 0-13.4-.2L100 158.4a152.6 152.6 0 0 0-46.2 15.9L93.8 40.2c1.8-6.2 2.7-9.2 4.5-11.4a14 14 0 0 1 5.7-4.1c2.6-1 5.7-1 12-1h29.5c6.3 0 9.4 0 12 1a14 14 0 0 1 5.9 4z" fill="url(#astro-a)"/>
+          <path d="M170.4 185.6c-6.5 5.6-19.5 9.4-34.4 9.4-18.3 0-33.6-5.7-37.7-13.4-.5.7-.8 1.6-.8 2.4v.3c0 8.3 17.2 15 38.4 15s38.4-6.7 38.4-15a5.5 5.5 0 0 0-.8-2.7c-1 1.4-2.1 2.7-3.1 4z" fill="#FF5D01"/>
+          <path d="M170.4 185.6c-6.5 5.6-19.5 9.4-34.4 9.4-18.3 0-33.6-5.7-37.7-13.4-.5.7-.8 1.6-.8 2.4v.3c0 8.3 17.2 15 38.4 15s38.4-6.7 38.4-15a5.5 5.5 0 0 0-.8-2.7c-1 1.4-2.1 2.7-3.1 4z" fill="url(#astro-a)" opacity="0.6"/>
+          <path d="M98.3 181.6c4 7.7 19.4 13.4 37.7 13.4 14.9 0 27.9-3.8 34.4-9.4-5.9-8.3-16.7-14-29.4-16.4a75 75 0 0 0-8.7-.9c-.8 0-1.5 0-2.3.1-14.9.9-27.2 6.6-31.7 13.2z" fill="#FF5D01"/>
+        </svg>
+
+        <div class="logo-divider"></div>
+
+        <!-- Zerops wordmark -->
+        <svg width="90" height="22" viewBox="0 0 90 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Zerops">
+          <text x="0" y="17" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="18" font-weight="700" fill="#e2e4f0">Zerops</text>
+        </svg>
+      </div>
+
+      <h1>{greeting}</h1>
+      <p class="subtitle">Astro SSR running on Zerops &mdash; Node.js at runtime.</p>
+
+      <div class="details">
+        <div class="row">
+          <span class="row-label">Framework</span>
+          <span class="row-value">Astro v{astroVersion}</span>
+        </div>
+        <div class="row">
+          <span class="row-label">Environment</span>
+          <span class="row-value">{nodeEnv}</span>
+        </div>
+        <div class="row">
+          <span class="row-label">Build time</span>
+          <span class="row-value">{buildTime}</span>
+        </div>
+        <div class="row">
+          <span class="row-label">Database</span>
+          <span class="row-value">
+            {dbStatus === 'connected'
+              ? <span class="status-ok">PostgreSQL connected</span>
+              : <span class="status-err">{dbError}</span>
+            }
+          </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
