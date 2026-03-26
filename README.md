@@ -1,11 +1,11 @@
 # Astro SSR Hello World Recipe App
 
-<!--#ZEROPS_EXTRACT_START:intro#-->
+<!--# ZEROPS_EXTRACT_START:intro #-->
 A minimal Astro SSR application with a server-rendered health check page that
 connects to a PostgreSQL database, runs idempotent migrations, and queries live
 data — demonstrating the full Zerops SSR integration pattern.
 Used within [Astro SSR Hello World recipe](https://app.zerops.io/recipes/astro-ssr-hello-world) for [Zerops](https://zerops.io) platform.
-<!--#ZEROPS_EXTRACT_END:intro#-->
+<!-- #ZEROPS_EXTRACT_END:intro #-->
 
 ⬇️ **Full recipe page and deploy with one-click**
 
@@ -15,7 +15,7 @@ Used within [Astro SSR Hello World recipe](https://app.zerops.io/recipes/astro-s
 
 ## Integration Guide
 
-<!--#ZEROPS_EXTRACT_START:integration-guide#-->
+<!--# ZEROPS_EXTRACT_START:integration-guide #-->
 
 ### 1. Adding `zerops.yaml`
 
@@ -149,4 +149,4 @@ zerops:
       start: zsc noop --silent
 ```
 
-<!--#ZEROPS_EXTRACT_END:integration-guide#-->
+<!--# ZEROPS_EXTRACT_END:integration-guide #-->
