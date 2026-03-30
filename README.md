@@ -150,4 +150,3 @@ zerops:
 ```
 
 <!-- #ZEROPS_EXTRACT_END:integration-guide# -->
-a
