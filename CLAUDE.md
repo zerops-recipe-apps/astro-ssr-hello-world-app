@@ -1,12 +1,12 @@
 # astro-ssr-hello-world-app
 
-Astro SSR app with `@astrojs/node` standalone adapter, PostgreSQL, and idempotent migrations on Zerops nodejs@22.
+Astro SSR app with `@astrojs/node` standalone adapter, PostgreSQL, and idempotent migrations on Zerops nodejs@24.
 
 ## Zerops service facts
 
 - HTTP port: `4321`
 - Siblings: `db` (PostgreSQL) — env: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASS`, `DB_NAME`
-- Runtime base: `nodejs@22`
+- Runtime base: `nodejs@24`
 
 ## Zerops dev
 
