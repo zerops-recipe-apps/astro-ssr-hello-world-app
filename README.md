@@ -28,7 +28,7 @@ repository. It tells Zerops how to build, deploy, and run your application.
 zerops:
   - setup: prod
     build:
-      base: nodejs@22
+      base: nodejs@24
       # Astro uses Vite + Rollup for bundling. Rollup ships a native
       # binary for glibc (Ubuntu/Debian) and musl (Alpine) separately.
       # The npm optional dep resolution sometimes misses the musl binary
@@ -67,7 +67,7 @@ zerops:
           path: /
 
     run:
-      base: nodejs@22
+      base: nodejs@24
 
       # Run migration once per deploy using zsc execOnce. Placed in
       # initCommands (not buildCommands) so migration and code are
@@ -103,7 +103,7 @@ zerops:
 
   - setup: dev
     build:
-      base: nodejs@22
+      base: nodejs@24
       # Ubuntu provides a richer toolset for interactive SSH development
       # (git, curl, editors) vs Alpine's minimal environment.
       os: ubuntu
@@ -121,7 +121,7 @@ zerops:
         - node_modules
 
     run:
-      base: nodejs@22
+      base: nodejs@24
       os: ubuntu
 
       initCommands:
