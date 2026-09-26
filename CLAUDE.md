@@ -19,6 +19,6 @@ Astro SSR app with `@astrojs/node` standalone adapter, PostgreSQL, and idempoten
 
 ## Notes
 
-- Build uses `os: ubuntu` to avoid Rollup musl/glibc binary resolution failures on Alpine — runtime is unaffected.
+- Build uses `os: ubuntu` to avoid Rolldown musl/glibc native-binding resolution failures on Alpine — runtime is unaffected.
 - Astro with `@astrojs/node` is NOT self-contained — `node_modules` must be deployed alongside `dist/` for `pg` at runtime.
 - `HOST: 0.0.0.0` is required so the Node adapter binds to all interfaces; without it the server only listens on localhost and is unreachable from the balancer.

@@ -29,12 +29,12 @@ zerops:
   - setup: prod
     build:
       base: nodejs@24
-      # Astro uses Vite + Rollup for bundling. Rollup ships a native
-      # binary for glibc (Ubuntu/Debian) and musl (Alpine) separately.
-      # The npm optional dep resolution sometimes misses the musl binary
-      # on Alpine build containers, causing build failures. Ubuntu
-      # avoids this - the runtime (Alpine) doesn't need Rollup at all
-      # since node_modules contains only runtime deps after deploy.
+      # Astro bundles with Vite and Rolldown. Those tools ship separate
+      # native bindings for glibc (Ubuntu) and musl (Alpine). npm's
+      # optional dependency resolution sometimes skips the musl binding
+      # on Alpine build containers, and the build fails when it is
+      # missing. Ubuntu avoids that miss. The runtime image stays
+      # Alpine: the built server does not load Rolldown.
       os: ubuntu
 
       buildCommands:
