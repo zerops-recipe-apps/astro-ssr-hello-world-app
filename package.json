@@ -1,7 +1,22 @@
 {
-  "name": "astro-ssr-hello-world",
+  "name": "astro-ssr-hello-world-app",
   "version": "0.1.0",
+  "description": "Minimal Astro SSR demo for Zerops with PostgreSQL (Node.js runtime).",
+  "author": "Zerops",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zerops-recipe-apps/astro-ssr-hello-world-app.git"
+  },
+  "homepage": "https://app.zerops.io/recipes/astro-ssr-hello-world",
+  "bugs": {
+    "url": "https://github.com/zerops-recipe-apps/astro-ssr-hello-world-app/issues"
+  },
+  "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "dev": "astro dev --host",
     "build": "astro build",
@@ -9,11 +24,19 @@
     "start": "node ./dist/server/entry.mjs"
   },
   "dependencies": {
-    "@astrojs/node": "^9.0.0",
-    "astro": "^5.0.0",
-    "pg": "^8.13.0"
+    "@astrojs/node": "11.1.6",
+    "astro": "7.3.3",
+    "pg": "8.23.0"
   },
   "devDependencies": {
-    "@types/pg": "^8.11.0"
-  }
+    "@types/pg": "8.23.1"
+  },
+  "keywords": [
+    "astro",
+    "zerops",
+    "ssr",
+    "nodejs",
+    "postgresql",
+    "hello-world"
+  ]
 }
