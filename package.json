@@ -24,8 +24,8 @@
     "start": "node ./dist/server/entry.mjs"
   },
   "dependencies": {
-    "@astrojs/node": "11.1.6",
-    "astro": "7.3.3",
+    "@astrojs/node": "11.1.7",
+    "astro": "7.3.8",
     "pg": "8.23.0"
   },
   "devDependencies": {
@@ -38,5 +38,8 @@
     "nodejs",
     "postgresql",
     "hello-world"
-  ]
+  ],
+  "overrides": {
+    "sharp": "0.35.5"
+  }
 }
